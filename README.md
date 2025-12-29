@@ -311,6 +311,35 @@ The default tag is `stable`. To use a different tag, replace the "stable" of `ta
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+<!-- TESTING -->
+## Testing
+
+The bot includes unit and integration tests to ensure functionality.
+
+### Running Tests
+
+To run all tests:
+```sh
+python3.13 -m unittest discover tests -v
+```
+
+To run specific test files:
+```sh
+python3.13 -m unittest tests.test_scheduler -v
+python3.13 -m unittest tests.test_integration -v
+```
+
+### Test Coverage
+
+The test suite includes:
+- **Next-run calculation tests**: Validates DST-safe scheduling with timezone handling and advance minutes
+- **Permission filtering tests**: Verifies Manage Guild permission checks
+- **Template rendering tests**: Ensures placeholders are correctly substituted
+- **Database integration tests**: Tests SQLAlchemy models and CRUD operations
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 <!-- COMMANDS GUIDE -->
 ## Commands Guide
 
