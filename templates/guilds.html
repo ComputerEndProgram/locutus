@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}My Guilds - Locutus{% endblock %}
+
+{% block content %}
+<h2 style="color: #1e3a8a; margin-bottom: 20px;">Select a Guild</h2>
+<p style="color: #6b7280; margin-bottom: 20px;">
+    Choose a guild to manage territory defense reminders. You can only configure guilds where you have "Manage Server" permission.
+</p>
+
+{% if guilds %}
+    <div class="guild-grid">
+        {% for guild in guilds %}
+        <a href="/guild/{{ guild.id }}" class="guild-card">
+            {% if guild.icon %}
+                <img src="https://cdn.discordapp.com/icons/{{ guild.id }}/{{ guild.icon }}.png?size=64" 
+                     alt="{{ guild.name }}" 
+                     style="width: 64px; height: 64px; border-radius: 50%; margin-bottom: 10px;">
+            {% else %}
+                <div style="width: 64px; height: 64px; border-radius: 50%; background: #3b82f6; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-bottom: 10px;">
+                    {{ guild.name[0] }}
+                </div>
+            {% endif %}
+            <h3>{{ guild.name }}</h3>
+        </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        <strong>No guilds found.</strong> You need "Manage Server" permission in at least one guild to use this feature.
+    </div>
+{% endif %}
+{% endblock %}

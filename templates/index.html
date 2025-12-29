@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 40px 0;">
+    <h2 style="color: #1e3a8a; margin-bottom: 20px;">Welcome to Locutus Territory Defense Scheduler</h2>
+    <p style="font-size: 18px; color: #6b7280; margin-bottom: 30px;">
+        Manage weekly territory defense reminders for your Discord guilds with ease.
+    </p>
+    
+    {% if logged_in %}
+        <a href="/guilds" class="btn btn-primary" style="font-size: 18px; padding: 15px 30px;">
+            Go to My Guilds
+        </a>
+    {% else %}
+        <div class="alert alert-info" style="max-width: 600px; margin: 0 auto 30px;">
+            <strong>Get Started:</strong> Login with Discord to manage territory defense reminders for your guilds.
+        </div>
+        <a href="/login" class="btn btn-primary" style="font-size: 18px; padding: 15px 30px;">
+            Login with Discord
+        </a>
+    {% endif %}
+    
+    <div style="margin-top: 50px; text-align: left; max-width: 800px; margin-left: auto; margin-right: auto;">
+        <h3 style="color: #1e3a8a; margin-bottom: 15px;">Features:</h3>
+        <ul style="line-height: 2; color: #4b5563;">
+            <li>✅ Create weekly recurring territory defense reminders</li>
+            <li>✅ Customize message templates per guild</li>
+            <li>✅ Configure timezone for accurate scheduling</li>
+            <li>✅ Set role mentions for notifications</li>
+            <li>✅ Send reminders in advance (e.g., 10 minutes before)</li>
+            <li>✅ Manage multiple guilds from one dashboard</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
