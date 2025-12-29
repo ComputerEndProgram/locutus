@@ -27,6 +27,13 @@ __all__ = [
     "SYNC_SLASH_COMMANDS",
     "DEFAULT_TIMEZONE",
     "TIME_LANG",
+    "LOCUTUS_BASE_URL",
+    "DISCORD_CLIENT_ID",
+    "DISCORD_CLIENT_SECRET",
+    "DISCORD_OAUTH_REDIRECT_URI",
+    "SESSION_SECRET",
+    "DATABASE_URL",
+    "WEB_UI_PORT",
 ]
 
 logger = logging.getLogger(__name__)
@@ -129,3 +136,24 @@ except ModuleNotFoundError:
 
 
 TIME_LANG = ["en"]
+
+# Web UI configuration
+LOCUTUS_BASE_URL = os.getenv("LOCUTUS_BASE_URL", "http://localhost:8000")
+DISCORD_CLIENT_ID = os.getenv("DISCORD_CLIENT_ID", "")
+DISCORD_CLIENT_SECRET = os.getenv("DISCORD_CLIENT_SECRET", "")
+DISCORD_OAUTH_REDIRECT_URI = os.getenv("DISCORD_OAUTH_REDIRECT_URI", f"{LOCUTUS_BASE_URL}/oauth/callback")
+SESSION_SECRET = os.getenv("SESSION_SECRET", "CHANGE_THIS_TO_A_RANDOM_SECRET_KEY")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./locutus.db")
+WEB_UI_PORT = int(os.getenv("WEB_UI_PORT", "8000"))
+
+if not DISCORD_CLIENT_ID or not DISCORD_CLIENT_SECRET:
+    logger.warning(
+        "[yellow]Discord OAuth credentials not set. Web UI will not function properly.[/yellow]",
+        extra={"markup": True},
+    )
+
+if SESSION_SECRET == "CHANGE_THIS_TO_A_RANDOM_SECRET_KEY":
+    logger.warning(
+        "[yellow]SESSION_SECRET is set to default value. Please change it in production.[/yellow]",
+        extra={"markup": True},
+    )

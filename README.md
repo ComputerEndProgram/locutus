@@ -159,12 +159,20 @@ You will also need a Discord bot.
       python3.13 -m pip install -U pip
       python3.13 -m pip install -U -r requirements.txt
       ```
-3. Rename `.env.example` to `.env` and replace `BOT-TOKEN` with your bot's token and `BOT-PREFIX` with your desired bot prefix.
+3. Rename `.env.example` to `.env` and configure your environment variables:
    Example `.env` file:
       ```dotenv
        TOKEN=VTDkXNDUzC3KyFoIxNzYx2_d4OQ.PK5K1A.9p0q3Kdi26j0eCa_vu3Ke_39KsL3Kkso83E_gB0
        PREFIX=?
        SYNC_SLASH_COMMANDS=on
+       DEFAULT_TIMEZONE=America/Vancouver
+       
+       # Web UI Configuration (optional)
+       LOCUTUS_BASE_URL=http://localhost:8000
+       DISCORD_CLIENT_ID=YOUR_DISCORD_CLIENT_ID
+       DISCORD_CLIENT_SECRET=YOUR_DISCORD_CLIENT_SECRET
+       SESSION_SECRET=CHANGE_THIS_TO_A_RANDOM_SECRET_KEY
+       WEB_UI_PORT=8000
       ```
    `SYNC_SLASH_COMMANDS` should be set to "on" the first time you start the bot and every time you update. It should be set to "off" during normal usage since syncing slash commands may take a long time.
 
@@ -179,6 +187,74 @@ To start the bot, simply run:
 ```sh
 python3.13 start.py
 ```
+
+### Web UI for Territory Defense Reminders
+
+This bot includes a web-based UI for managing weekly territory defense reminders. This feature is particularly useful for game alliances to coordinate defense schedules.
+
+#### Setting up the Web UI
+
+1. Configure OAuth2 in your Discord Application:
+   - Go to [Discord Developer Portal](https://discord.com/developers/applications)
+   - Select your application
+   - Navigate to **OAuth2** → **General**
+   - Add a redirect URL: `http://localhost:8000/oauth/callback` (or your production URL)
+   - Copy your **Client ID** and **Client Secret**
+
+2. Update your `.env` file with the OAuth credentials:
+   ```dotenv
+   LOCUTUS_BASE_URL=http://localhost:8000
+   DISCORD_CLIENT_ID=your_client_id_here
+   DISCORD_CLIENT_SECRET=your_client_secret_here
+   DISCORD_OAUTH_REDIRECT_URI=http://localhost:8000/oauth/callback
+   SESSION_SECRET=generate_a_random_secret_key_here
+   ```
+
+3. Start the web server:
+   ```sh
+   python3.13 start_web.py
+   ```
+
+4. Access the web UI at `http://localhost:8000`
+
+#### Web UI Features
+
+- **Discord OAuth Login**: Secure authentication via Discord
+- **Multi-Guild Support**: Manage reminders for multiple Discord servers
+- **Weekly Recurring Schedules**: Set up territory defense reminders that repeat weekly
+- **Timezone Support**: Configure schedules in your local timezone with automatic DST handling
+- **Template Management**: Create and customize message templates per guild
+- **Advance Notifications**: Send reminders before the scheduled time (e.g., 10 minutes prior)
+- **Role Mentions**: Configure role mentions for notifications
+
+#### Deployment Behind Reverse Proxy
+
+For production deployment, use a reverse proxy like Nginx or Caddy:
+
+**Caddy Example** (`Caddyfile`):
+```
+locutus.example.com {
+    reverse_proxy localhost:8000
+}
+```
+
+**Nginx Example**:
+```nginx
+server {
+    listen 80;
+    server_name locutus.example.com;
+    
+    location / {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Make sure to update `LOCUTUS_BASE_URL` and `DISCORD_OAUTH_REDIRECT_URI` in your `.env` to match your production domain.
 
 <!--_For more examples, please refer to the [Documentation](https://example.com)_-->
 
@@ -231,6 +307,35 @@ Find the **CONTAINER ID** of the container named "discord-message-scheduler" and
 
 The default tag is `stable`. To use a different tag, replace the "stable" of `taaku18/dms:stable` with your desired tag in `docker-compose.yml`.
 
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- TESTING -->
+## Testing
+
+The bot includes unit and integration tests to ensure functionality.
+
+### Running Tests
+
+To run all tests:
+```sh
+python3.13 -m unittest discover tests -v
+```
+
+To run specific test files:
+```sh
+python3.13 -m unittest tests.test_scheduler -v
+python3.13 -m unittest tests.test_integration -v
+```
+
+### Test Coverage
+
+The test suite includes:
+- **Next-run calculation tests**: Validates DST-safe scheduling with timezone handling and advance minutes
+- **Permission filtering tests**: Verifies Manage Guild permission checks
+- **Template rendering tests**: Ensures placeholders are correctly substituted
+- **Database integration tests**: Tests SQLAlchemy models and CRUD operations
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

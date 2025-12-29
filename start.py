@@ -25,6 +25,15 @@ if __name__ == "__main__":
         async with bot:
             await bot.load_extension("cogs.scheduler")
             await bot.load_extension("cogs.general")
+            
+            # Load web scheduler for territory defense reminders
+            try:
+                from src.web_scheduler import setup_web_scheduler
+                bot.web_scheduler = await setup_web_scheduler(bot)
+                logger.info("[green]Web scheduler loaded.[/green]", extra={"markup": True})
+            except Exception as e:
+                logger.warning("[yellow]Failed to load web scheduler: %s[/yellow]", e, extra={"markup": True})
+            
             logger.info("[green]Starting bot.[/green]", extra={"markup": True})
             await bot.start()
 

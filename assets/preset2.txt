@@ -2,6 +2,6 @@
 
 <@&{role_id}>
 
-Eine Gebietsverteidigung steht in **{system_name}** um **<t:1763892000:t>** bevor.
+Eine Gebietsverteidigung steht in **{system_name}** bevor.
 
 — Übertragung beendet.
