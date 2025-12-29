@@ -29,10 +29,6 @@ def load_preset_templates() -> dict[str, str]:
     if preset1_path.exists():
         with open(preset1_path, "r", encoding="utf-8") as f:
             content = f.read()
-            # Standardize placeholders
-            content = content.replace("{system_name}", "{system_name}")
-            content = content.replace("role_id", "{role_id}")
-            content = content.replace("<@&role_id>", "<@&{role_id}>")
             templates["English Default"] = content
 
     # Load preset2.txt (German)
@@ -40,10 +36,6 @@ def load_preset_templates() -> dict[str, str]:
     if preset2_path.exists():
         with open(preset2_path, "r", encoding="utf-8") as f:
             content = f.read()
-            # Standardize placeholders
-            content = content.replace("{system_name}", "{system_name}")
-            content = content.replace("{role_id}", "{role_id}")
-            content = content.replace("<@&{role_id}>", "<@&{role_id}>")
             templates["German Default"] = content
 
     return templates
