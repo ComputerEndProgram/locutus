@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -35,7 +35,7 @@ def write_bot_guild_ids(guild_ids: set[str]) -> None:
         
         state = {
             "guild_ids": list(guild_ids),
-            "updated_at": datetime.utcnow().isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
         
         # Write atomically by writing to temp file then renaming
@@ -63,7 +63,7 @@ def read_bot_guild_ids(max_age_seconds: int = 300) -> set[str]:
             return set()
         
         # Check file age
-        file_age = datetime.utcnow().timestamp() - STATE_FILE.stat().st_mtime
+        file_age = datetime.now(timezone.utc).timestamp() - STATE_FILE.stat().st_mtime
         if file_age > max_age_seconds:
             logger.warning(f"Bot state file is stale ({file_age:.0f}s old)")
             return set()

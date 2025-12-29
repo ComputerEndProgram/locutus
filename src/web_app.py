@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 import httpx
@@ -29,6 +29,7 @@ from src.env import (
 )
 from src.web_db import GuildConfig, Template, Schedule, get_session_maker, init_db, get_engine
 from src.template_utils import ensure_guild_has_templates
+from src.bot_state import read_bot_guild_ids
 
 logger = logging.getLogger(__name__)
 
@@ -163,8 +164,6 @@ def get_bot_guild_ids() -> set[str]:
     Returns:
         Set of guild ID strings, or empty set if unavailable
     """
-    from src.bot_state import read_bot_guild_ids
-    
     # First check if callback is available (for testing or advanced integration)
     if hasattr(app.state, "get_bot_guild_ids"):
         try:
@@ -237,7 +236,7 @@ async def get_manageable_guilds_with_cache(
     cache_valid = False
     if use_cache and cached_guilds is not None and cache_timestamp is not None:
         try:
-            cache_age = datetime.utcnow().timestamp() - cache_timestamp
+            cache_age = datetime.now(timezone.utc).timestamp() - cache_timestamp
             cache_valid = cache_age < GUILD_CACHE_TTL
         except (TypeError, ValueError):
             pass
@@ -253,7 +252,7 @@ async def get_manageable_guilds_with_cache(
         
         # Update cache in session
         session_data["cached_guilds"] = guilds
-        session_data["guild_cache_timestamp"] = datetime.utcnow().timestamp()
+        session_data["guild_cache_timestamp"] = datetime.now(timezone.utc).timestamp()
     
     # Filter by bot presence if requested
     if filter_by_bot:

@@ -8,7 +8,7 @@ import asyncio
 import json
 import os
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock, MagicMock, patch
 
 # Set minimal env before importing
@@ -73,7 +73,7 @@ class TestGuildCaching(unittest.TestCase):
 
     def test_cache_ttl_validation(self):
         """Test cache TTL expiration logic."""
-        now = datetime.utcnow().timestamp()
+        now = datetime.now(timezone.utc).timestamp()
 
         # Fresh cache (5 seconds old)
         cache_timestamp = now - 5
@@ -217,7 +217,7 @@ class TestCacheIntegration(unittest.TestCase):
             session_data = {
                 "access_token": "test_token",
                 "cached_guilds": cached_guilds,
-                "guild_cache_timestamp": datetime.utcnow().timestamp(),
+                "guild_cache_timestamp": datetime.now(timezone.utc).timestamp(),
             }
 
             # Mock bot guild IDs to avoid warnings
@@ -243,7 +243,7 @@ class TestCacheIntegration(unittest.TestCase):
             session_data = {
                 "access_token": "test_token",
                 "cached_guilds": old_guilds,
-                "guild_cache_timestamp": datetime.utcnow().timestamp() - 100,  # Stale
+                "guild_cache_timestamp": datetime.now(timezone.utc).timestamp() - 100,  # Stale
             }
 
             with patch("httpx.AsyncClient") as mock_client_class:
@@ -276,7 +276,7 @@ class TestCacheIntegration(unittest.TestCase):
             session_data = {
                 "access_token": "test_token",
                 "cached_guilds": cached_guilds,
-                "guild_cache_timestamp": datetime.utcnow().timestamp() - 100,  # Stale
+                "guild_cache_timestamp": datetime.now(timezone.utc).timestamp() - 100,  # Stale
             }
 
             with patch("httpx.AsyncClient") as mock_client_class:
