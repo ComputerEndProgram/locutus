@@ -1,7 +1,7 @@
 **🛸 Territory Defense Notification: {system_name}**
 
-<@&role_id>
+<@&{role_id}>
 
-A Territory Defense is scheduled in **{system_name}** at **<t:1763910000:t>**.
+A Territory Defense is scheduled in **{system_name}**.
 
 — Transmission complete.
