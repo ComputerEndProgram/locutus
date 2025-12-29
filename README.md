@@ -220,12 +220,20 @@ This bot includes a web-based UI for managing weekly territory defense reminders
 #### Web UI Features
 
 - **Discord OAuth Login**: Secure authentication via Discord
-- **Multi-Guild Support**: Manage reminders for multiple Discord servers
+- **Multi-Guild Support**: Manage reminders for multiple Discord servers (only shows guilds where the bot is present)
 - **Weekly Recurring Schedules**: Set up territory defense reminders that repeat weekly
 - **Timezone Support**: Configure schedules in your local timezone with automatic DST handling
 - **Template Management**: Create and customize message templates per guild
 - **Advance Notifications**: Send reminders before the scheduled time (e.g., 10 minutes prior)
 - **Role Mentions**: Configure role mentions for notifications
+- **Rate Limit Protection**: Guild membership is cached for 30 seconds to avoid hitting Discord API rate limits
+- **Dark Mode Interface**: Modern dark-themed UI for comfortable viewing
+
+#### Important Notes
+
+- The web UI caches your Discord guild membership for 30 seconds to prevent hitting Discord's API rate limits
+- Only guilds where the bot has joined are displayed in the web UI
+- When running both the bot and web UI concurrently (recommended), they communicate via a shared state file to ensure proper guild visibility
 
 #### Deployment Behind Reverse Proxy
 
