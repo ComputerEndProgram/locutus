@@ -81,6 +81,41 @@ class Bot(commands.Bot):
         This is called when the bot is ready.
         """
         logger.info("[bold green]Bot is ready.[/bold green]", extra={"markup": True})
+        
+        # Write initial guild state for web app
+        try:
+            from src.bot_state import write_bot_guild_ids, get_bot_guilds_from_bot
+            guild_ids = get_bot_guilds_from_bot(self)
+            write_bot_guild_ids(guild_ids)
+            logger.info(f"Wrote {len(guild_ids)} guild IDs to state file")
+        except Exception as e:
+            logger.warning(f"Failed to write bot state: {e}")
+    
+    async def on_guild_join(self, guild: discord.Guild) -> None:
+        """
+        This is called when the bot joins a guild.
+        Updates the shared state file with current guild list.
+        """
+        logger.info(f"Joined guild: {guild.name} ({guild.id})")
+        try:
+            from src.bot_state import write_bot_guild_ids, get_bot_guilds_from_bot
+            guild_ids = get_bot_guilds_from_bot(self)
+            write_bot_guild_ids(guild_ids)
+        except Exception as e:
+            logger.warning(f"Failed to update bot state: {e}")
+    
+    async def on_guild_remove(self, guild: discord.Guild) -> None:
+        """
+        This is called when the bot is removed from a guild.
+        Updates the shared state file with current guild list.
+        """
+        logger.info(f"Removed from guild: {guild.name} ({guild.id})")
+        try:
+            from src.bot_state import write_bot_guild_ids, get_bot_guilds_from_bot
+            guild_ids = get_bot_guilds_from_bot(self)
+            write_bot_guild_ids(guild_ids)
+        except Exception as e:
+            logger.warning(f"Failed to update bot state: {e}")
 
     _TYPE_CLEAN_NAME: dict[str, str] = {
         discord.TextChannel.__name__: "text channel",
